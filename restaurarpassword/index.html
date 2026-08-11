@@ -53,14 +53,12 @@ input:focus { border-color: #ffb800; }
     <span class="letra-a">T</span><span class="texto-resto">RANSPORT</span>
     <div class="badge-x"><span class="letra-x">X</span></div>
   </div>
-  
-  <!-- 🏢 SUBTÍTULO DINÁMICO MULTI-EMPRESA SAAS [PDF: 0.1.1] -->
+    
   <div id="subtituloSaaS" class="subtitulo">MÓDULO DE IDENTIDAD SAAS 🛰️</div>
   
   <div id="msgExito" class="alerta alerta-exito"></div>
   <div id="msgError" class="alerta alerta-error"></div>
-
-  <!-- 💡 TU NUEVO CUADRO DE TEXTO INTERACTIVO DE CONFIGURACIÓN [PDF: 0.1.4] -->
+  
   <div id="bloqueConfiguradorManual" class="caja-SaaS-inicial">
     <p style="font-size: 13px; color: #8b949e; margin-bottom: 15px; font-family: sans-serif; font-weight: 500;">
       Introducí el nombre o ID de tu organización para sincronizar tu base de datos de destino:
@@ -73,7 +71,6 @@ input:focus { border-color: #ffb800; }
     </button>
   </div>
 
-  <!-- FORMULARIO ORIGINAL DE RECOVERY TOTALMENTE REDIRECCIONADO [PDF: 0.1.4] -->
   <form id="formRecuperar" onsubmit="procesarCambioDeClave(event)">
     <h3>Restablecer Contraseña</h3>
     
@@ -114,17 +111,14 @@ input:focus { border-color: #ffb800; }
     <a id="linkDinamicoApp" href="transportx://" class="boton-naranja-app">IR A LA VERSION APP →</a>
   </div>
 </div>
-<script>
-  // 🛰️ CREDENCIALES FIJAS DE TU BASE DE DATOS CENTRAL DE RUTEO [PDF: 0.1.5]
-  const BASE_URL_CONTROL = "https://supabase.co";
-  const BASE_KEY_CONTROL = "sb_publishable_JH4nXz9b4zZmofcaBK622A_70CKOPB4";
-
-  // Variables elásticas que se rellenan al vuelo tras conectar la organización [PDF: 0.1.5]
+<script>  
+  const BASE_URL_CONTROL = "https://tavxtkirrleyqgrnyvbh.supabase.co";
+  const BASE_KEY_CONTROL = "sb_publishable_CNSQWrPPBy4w3AeTfDCTeg_Nfg0hv40";
+  
   let urlSupabaseCliente = "";
   let keyAnonCliente = "";
   let tokenGlobalDeAcceso = "";
 
-  // Al arrancar el DOM, validamos si la URL ya transporta la empresa [PDF: 0.1.5]
   window.addEventListener('DOMContentLoaded', async () => {
     const hashRuta = window.location.hash;
     const buscarParametros = window.location.search;
@@ -137,29 +131,26 @@ input:focus { border-color: #ffb800; }
     const paramsUrl = new URLSearchParams(buscarParametros);
     const slugEmpresa = paramsUrl.get('empresa');
 
-    // 🏎️ AUTOMATIZACIÓN ESTILO BOLT: Si el link ya traía la empresa, la conectamos de una solo golpe [PDF: 0.1.5]
     if (slugEmpresa) {
       document.getElementById('inputSlugManual').value = slugEmpresa;
       await conectarConBaseDeDatosSaaS(slugEmpresa);
     }
   });
 
-  // 💡 ACCIÓN DE TU CUADRO DE TEXTO: Conecta manualmente si el enlace vino limpio [PDF: 0.1.4]
   async function validarYConectarEmpresaManual() {
     const slugIntroducido = document.getElementById('inputSlugManual').value.trim().toLowerCase();
     const divError = document.getElementById('msgError');
     divError.style.display = 'none';
 
     if (!slugIntroducido) {
-      divError.innerText = "⚠ Por favor, ingresá el ID o nombre de tu empresa para continuar.";
+      divError.innerText = "⚠ Ingresá el ID de tu empresa para continuar.";
       divError.style.display = 'block';
       return;
     }
 
     await conectarConBaseDeDatosSaaS(slugIntroducido);
   }
-
-  // 📡 MOTOR CONECTOR CENTRAL: Descarga los secretos de la base de datos hija usando la de ruteo [PDF: 0.1.5]
+  
   async function conectarConBaseDeDatosSaaS(slug) {
     const divError = document.getElementById('msgError');
     const divExito = document.getElementById('msgExito');
@@ -169,7 +160,6 @@ input:focus { border-color: #ffb800; }
       document.getElementById('btnConectarManual').disabled = true;
       document.getElementById('btnConectarManual').innerText = "CONECTANDO ENTORNO... ⌛";
 
-      // Query quirúrgica a tu tabla directorio_empresas de la base de ruteo [PDF: 0.1.5]
       const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?nombre_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_key_anon,nombre_empresa`;
       
       const respuestaSaaS = await fetch(urlFetch, {
@@ -186,16 +176,13 @@ input:focus { border-color: #ffb800; }
         const org = datosEmpresa[0];
         urlSupabaseCliente = org.supabase_url;
         keyAnonCliente = org.supabase_key_anon;
-        
-        // Estampamos el nombre corporativo real y configuramos el deep link del banner [PDF: 0.1.1, 0.1.5]
+                
         document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
         document.getElementById('linkDinamicoApp').href = `${slug}://`;
         document.getElementById('banner-retorno').style.display = 'block';
-        
-        // Ocultamos el configurador manual de forma limpia ya que cumplió su ciclo [PDF: 0.1.4]
+                
         document.getElementById('bloqueConfiguradorManual').style.display = 'none';
-
-        // Desbloqueamos los campos del formulario de contraseñas de abajo [PDF: 0.1.4]
+        
         document.getElementById('inputPass1').disabled = false;
         document.getElementById('inputPass2').disabled = false;
         document.getElementById('btnSubmit').disabled = false;
@@ -250,7 +237,7 @@ input:focus { border-color: #ffb800; }
     divExito.style.display = 'block';
 
     try {
-      // 🔑 LE PEGA EN CALIENTE A LA URL DINÁMICA DE LA BASE DE DATOS HIJA ESPECÍFICA [PDF: 0.1.5]
+      
       const respuesta = await fetch(`${urlSupabaseCliente}/auth/v1/user`, {
         method: 'PUT',
         headers: {
