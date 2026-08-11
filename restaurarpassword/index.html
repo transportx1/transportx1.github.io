@@ -61,7 +61,7 @@ input:focus { border-color: #ffb800; }
   
   <div id="bloqueConfiguradorManual" class="caja-SaaS-inicial">
     <p style="font-size: 13px; color: #8b949e; margin-bottom: 15px; font-family: sans-serif; font-weight: 500;">
-      Introducí el nombre o ID de tu organización para sincronizar tu base de datos de destino:
+      Introducí el ID de tu organización para sincronizar tu base de datos de destino:
     </p>
     <div class="grupo-input" style="margin-bottom: 12px;">
       <input type="text" id="inputSlugManual" class="input-SaaS" placeholder="Ej: actividadx, transportepya" autoCapitalize="none">
@@ -150,7 +150,8 @@ input:focus { border-color: #ffb800; }
 
     await conectarConBaseDeDatosSaaS(slugIntroducido);
   }
-    
+   
+
 	async function conectarConBaseDeDatosSaaS(slug) {
 	  const divError = document.getElementById('msgError');
 	  const divExito = document.getElementById('msgExito');
@@ -159,11 +160,10 @@ input:focus { border-color: #ffb800; }
 	  try {
 		document.getElementById('btnConectarManual').disabled = true;
 		document.getElementById('btnConectarManual').innerText = "CONECTANDO ENTORNO... ⌛";
-
-		// 🔑 RECTIFICACIÓN DE SELECT: Usamos supabase_anon_key de forma estricta [PDF: 0.1.8]
-		const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?nombre_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_anon_key,nombre_empresa`;
 		
-		console.log("🚀 Despachando consulta SaaS alineada al diccionario de datos para:", slug);
+		const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?id_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_anon_key,nombre_empresa`;
+		
+		console.log("🚀 Despachando consulta SaaS filtrando por id_empresa para:", slug);
 
 		const respuestaSaaS = await fetch(urlFetch, {
 		  method: 'GET',
@@ -175,25 +175,24 @@ input:focus { border-color: #ffb800; }
 		
 		const datosEmpresa = await respuestaSaaS.json();
 		
+		
 		if (datosEmpresa && datosEmpresa.length > 0) {
 		  const org = datosEmpresa[0];
 		  		  
 		  urlSupabaseCliente = org.supabase_url;
-		  keyAnonCliente = org.supabase_anon_key;
+		  keyAnonCliente = org.supabase_anon_key; 
 		  		  
 		  document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
 		  document.getElementById('linkDinamicoApp').href = `${slug}://`;
 		  document.getElementById('banner-retorno').style.display = 'block';
-		  
-		  // Ocultamos el configurador manual de forma limpia ya que cumplió su ciclo [PDF: 0.1.8]
+		  		  
 		  document.getElementById('bloqueConfiguradorManual').style.display = 'none';
-
-		  // Desbloqueamos los campos del formulario de contraseñas de abajo [PDF: 0.1.8]
+ 
 		  document.getElementById('inputPass1').disabled = false;
 		  document.getElementById('inputPass2').disabled = false;
 		  document.getElementById('btnSubmit').disabled = false;
 		} else {
-		  throw new Error("No se encontró ninguna organización registrada con ese ID en el directorio central.");
+		  throw new Error(`No se encontró ninguna organización registrada con el ID "${slug}" en el directorio central.`);
 		}
 	  } catch (err) {
 		console.error(err);
@@ -203,6 +202,7 @@ input:focus { border-color: #ffb800; }
 		document.getElementById('btnConectarManual').innerText = "CONECTAR ENTORNO 🔌";
 	  }
 	}
+
   
   function alternarVisibilidad(idInput, boton) {
     const campo = document.getElementById(idInput);
