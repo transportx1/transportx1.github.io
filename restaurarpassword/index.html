@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransportX Restablecer Contraseña</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+background-color: #0c0c0e;
+color: #ffffff;
+font-family: system-ui, -apple-system, sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+padding: 20px;
+}
+.caja-portal { text-align: center; padding: 45px 25px; max-width: 420px; width: 100%; }
+.logo-bloque { display: flex; justify-content: center; align-items: center; margin-bottom: 5px; gap: 6px; }
+.letra-a { color: #ffb300; font-size: 52px; font-weight: 950; font-family: 'Arial Black', 'Trebuchet MS', sans-serif; font-style: italic; transform: rotate(-1deg); }
+.texto-resto { font-size: 36px; font-weight: 950; color: #ffb300; font-style: italic; letter-spacing: 4px; font-family: 'Arial Black', 'Trebuchet MS', sans-serif; text-transform: uppercase; transform: rotate(-1deg); margin-left: -4px; }
+.badge-x { background-color: #ffea00; border-radius: 12px; width: 48px; height: 48px; display: flex; justify-content: center; align-items: center; margin-left: 1px; transform: rotate(5deg); }
+.letra-x { color: #e61900; font-size: 32px; font-weight: 900; font-family: 'Arial', sans-serif; transform: rotate(-6deg); padding-bottom: 2px; }
+.subtitulo { color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 2px; margin-bottom: 35px; text-transform: uppercase; opacity: 0.9; }
+h3 { font-size: 18px; font-weight: 700; margin-bottom: 25px; color: #ffffff; }
+.grupo-input { text-align: left; margin-bottom: 18px; position: relative; }
+.contenedor-password { position: relative; display: flex; align-items: center; width: 100%; }
+input { width: 100%; background-color: #0d1117; color: #ffffff; padding: 16px 20px; padding-right: 65px; border-radius: 8px; border: 1px solid #1f242c; font-size: 15px; outline: none; transition: border-color 0.2s; }
+input:focus { border-color: #ffb800; }
+.input-SaaS { padding-right: 20px !important; border-color: #24b34b !important; }
+.btn-ojo { position: absolute; right: 20px; background: none; border: none; color: #ffb800; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-principal { width: 100%; background-color: #24b34b; color: #ffffff; padding: 18px; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; letter-spacing: 1px; cursor: pointer; margin-top: 20px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(36, 179, 75, 0.2); transition: background-color 0.2s; }
+.btn-principal:active { background-color: #1e963e; }
+.btn-principal:disabled { background-color: #1f1f24; color: #666; cursor: not-allowed; box-shadow: none; }
+.alerta { font-size: 13px; font-weight: bold; margin-bottom: 25px; text-align: center; display: none; padding: 12px; border-radius: 8px; }
+.alerta-exito { color: #00d2ff; background: rgba(0,210,255,0.05); border: 1px solid rgba(0,210,255,0.1); }
+.alerta-error { color: #ff3333; background: rgba(255,51,51,0.05); border: 1px solid rgba(255,51,51,0.1); }
+.banner-version-web { background-color: #111625; border-radius: 10px; padding: 20px; margin-top: 35px; text-align: left; box-sizing: border-box; width: 100%; border: 1px solid rgba(255, 255, 255, 0.03); }
+.banner-contenido { display: flex; align-items: flex-start; margin-bottom: 15px; }
+.icono-planeta { width: 22px; height: 22px; margin-right: 12px; flex-shrink: 0; margin-top: 2px; }
+.banner-texto { display: flex; flex-direction: column; font-size: 13px; line-height: 1.4; }
+.banner-texto strong { color: #ffffff; font-weight: 700; margin-bottom: 2px; }
+.banner-texto span { color: #94a3b8; }
+.boton-naranja-app { display: block; background-color: #f97316; color: #000000; font-weight: 800; font-size: 13px; text-align: center; text-decoration: none; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; letter-spacing: 0.5px; transition: background-color 0.2s ease; }
+.boton-naranja-app:hover { background-color: #ea580c; }
+.caja-SaaS-inicial { background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid #30363d; margin-bottom: 25px; }
+</style>
+</head>
+<body>
+<div class="caja-portal">
+  <div class="logo-bloque">
+    <span class="letra-a">T</span><span class="texto-resto">RANSPORT</span>
+    <div class="badge-x"><span class="letra-x">X</span></div>
+  </div>
+  
+  <!-- 🏢 SUBTÍTULO DINÁMICO MULTI-EMPRESA SAAS [PDF: 0.1.1] -->
+  <div id="subtituloSaaS" class="subtitulo">MÓDULO DE IDENTIDAD SAAS 🛰️</div>
+  
+  <div id="msgExito" class="alerta alerta-exito"></div>
+  <div id="msgError" class="alerta alerta-error"></div>
+
+  <!-- 💡 TU NUEVO CUADRO DE TEXTO INTERACTIVO DE CONFIGURACIÓN [PDF: 0.1.4] -->
+  <div id="bloqueConfiguradorManual" class="caja-SaaS-inicial">
+    <p style="font-size: 13px; color: #8b949e; margin-bottom: 15px; font-family: sans-serif; font-weight: 500;">
+      Introducí el nombre o ID de tu organización para sincronizar tu base de datos de destino:
+    </p>
+    <div class="grupo-input" style="margin-bottom: 12px;">
+      <input type="text" id="inputSlugManual" class="input-SaaS" placeholder="Ej: actividadx, transportepya" autoCapitalize="none">
+    </div>
+    <button type="button" id="btnConectarManual" onclick="validarYConectarEmpresaManual()" style="width: 100%; background-color: #38bdf8; color: #000; padding: 12px; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; text-transform: uppercase;">
+      CONECTAR ENTORNO 🔌
+    </button>
+  </div>
+
+  <!-- FORMULARIO ORIGINAL DE RECOVERY TOTALMENTE REDIRECCIONADO [PDF: 0.1.4] -->
+  <form id="formRecuperar" onsubmit="procesarCambioDeClave(event)">
+    <h3>Restablecer Contraseña</h3>
+    
+    <div class="grupo-input">
+      <div class="contenedor-password">
+        <input type="password" id="inputPass1" placeholder="Nueva Contraseña (Mínimo 6)" required minlength="6" disabled>
+        <button type="button" class="btn-ojo" onclick="alternarVisibilidad('inputPass1', this)">Ver</button>
+      </div>
+    </div>
+    
+    <div class="grupo-input">
+      <div class="contenedor-password">
+        <input type="password" id="inputPass2" placeholder="Repetir nueva contraseña" required minlength="6" disabled>
+        <button type="button" class="btn-ojo" onclick="alternarVisibilidad('inputPass2', this)">Ver</button>
+      </div>
+    </div>
+    
+    <button type="submit" id="btnSubmit" class="btn-principal" disabled>ACTUALIZAR CONTRASEÑA</button>
+    
+    <p style="color: #64748b; font-size: 11px; text-align: center; margin-top: 15px; margin-bottom: 0;">
+      2026 TransportX. Todos los derechos reservados.
+    </p>
+  </form>
+  
+  <div class="banner-version-web" id="banner-retorno" style="display: none;">
+    <div class="banner-contenido">
+      <svg class="icono-planeta" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+        <path d="M2 12h20"></path>
+      </svg>
+      <div class="banner-texto">
+        <p><strong>Estás navegando en la versión Web.</strong></p>
+        <p><strong>Para iPhone ahora mismo es la única opción.</strong></p>
+        <span>Si tenés instalada la App, podés usar después de confirmar tu dirección de correo electrónico.</span>
+      </div>
+    </div>
+    <a id="linkDinamicoApp" href="transportx://" class="boton-naranja-app">IR A LA VERSION APP →</a>
+  </div>
+</div>
+<script>
+  // 🛰️ CREDENCIALES FIJAS DE TU BASE DE DATOS CENTRAL DE RUTEO [PDF: 0.1.5]
+  const BASE_URL_CONTROL = "https://supabase.co";
+  const BASE_KEY_CONTROL = "sb_publishable_JH4nXz9b4zZmofcaBK622A_70CKOPB4";
+
+  // Variables elásticas que se rellenan al vuelo tras conectar la organización [PDF: 0.1.5]
+  let urlSupabaseCliente = "";
+  let keyAnonCliente = "";
+  let tokenGlobalDeAcceso = "";
+
+  // Al arrancar el DOM, validamos si la URL ya transporta la empresa [PDF: 0.1.5]
+  window.addEventListener('DOMContentLoaded', async () => {
+    const hashRuta = window.location.hash;
+    const buscarParametros = window.location.search;
+    
+    if (hashRuta) {
+      const parametrosHash = new URLSearchParams(hashRuta.replace('#', '?'));
+      tokenGlobalDeAcceso = parametrosHash.get('access_token');
+    }
+
+    const paramsUrl = new URLSearchParams(buscarParametros);
+    const slugEmpresa = paramsUrl.get('empresa');
+
+    // 🏎️ AUTOMATIZACIÓN ESTILO BOLT: Si el link ya traía la empresa, la conectamos de una solo golpe [PDF: 0.1.5]
+    if (slugEmpresa) {
+      document.getElementById('inputSlugManual').value = slugEmpresa;
+      await conectarConBaseDeDatosSaaS(slugEmpresa);
+    }
+  });
+
+  // 💡 ACCIÓN DE TU CUADRO DE TEXTO: Conecta manualmente si el enlace vino limpio [PDF: 0.1.4]
+  async function validarYConectarEmpresaManual() {
+    const slugIntroducido = document.getElementById('inputSlugManual').value.trim().toLowerCase();
+    const divError = document.getElementById('msgError');
+    divError.style.display = 'none';
+
+    if (!slugIntroducido) {
+      divError.innerText = "⚠ Por favor, ingresá el ID o nombre de tu empresa para continuar.";
+      divError.style.display = 'block';
+      return;
+    }
+
+    await conectarConBaseDeDatosSaaS(slugIntroducido);
+  }
+
+  // 📡 MOTOR CONECTOR CENTRAL: Descarga los secretos de la base de datos hija usando la de ruteo [PDF: 0.1.5]
+  async function conectarConBaseDeDatosSaaS(slug) {
+    const divError = document.getElementById('msgError');
+    const divExito = document.getElementById('msgExito');
+    divError.style.display = 'none';
+    
+    try {
+      document.getElementById('btnConectarManual').disabled = true;
+      document.getElementById('btnConectarManual').innerText = "CONECTANDO ENTORNO... ⌛";
+
+      // Query quirúrgica a tu tabla directorio_empresas de la base de ruteo [PDF: 0.1.5]
+      const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?nombre_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_key_anon,nombre_empresa`;
+      
+      const respuestaSaaS = await fetch(urlFetch, {
+        method: 'GET',
+        headers: {
+          'apikey': BASE_KEY_CONTROL,
+          'Authorization': `Bearer ${BASE_KEY_CONTROL}`
+        }
+      });
+      
+      const datosEmpresa = await respuestaSaaS.json();
+      
+      if (datosEmpresa && datosEmpresa.length > 0) {
+        const org = datosEmpresa[0];
+        urlSupabaseCliente = org.supabase_url;
+        keyAnonCliente = org.supabase_key_anon;
+        
+        // Estampamos el nombre corporativo real y configuramos el deep link del banner [PDF: 0.1.1, 0.1.5]
+        document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
+        document.getElementById('linkDinamicoApp').href = `${slug}://`;
+        document.getElementById('banner-retorno').style.display = 'block';
+        
+        // Ocultamos el configurador manual de forma limpia ya que cumplió su ciclo [PDF: 0.1.4]
+        document.getElementById('bloqueConfiguradorManual').style.display = 'none';
+
+        // Desbloqueamos los campos del formulario de contraseñas de abajo [PDF: 0.1.4]
+        document.getElementById('inputPass1').disabled = false;
+        document.getElementById('inputPass2').disabled = false;
+        document.getElementById('btnSubmit').disabled = false;
+      } else {
+        throw new Error("No se encontró ninguna organización registrada con ese ID en el directorio central.");
+      }
+    } catch (err) {
+      console.error(err);
+      divError.innerText = "❌ " + (err.message || "Fallo de conexión en el ruteo central.");
+      divError.style.display = 'block';
+      document.getElementById('btnConectarManual').disabled = false;
+      document.getElementById('btnConectarManual').innerText = "CONECTAR ENTORNO 🔌";
+    }
+  }
+
+  function alternarVisibilidad(idInput, boton) {
+    const campo = document.getElementById(idInput);
+    if (campo.type === "password") {
+      campo.type = "text";
+      boton.innerText = "Ocultar";
+    } else {
+      campo.type = "password";
+      boton.innerText = "Ver";
+    }
+  }
+
+  async function procesarCambioDeClave(e) {
+    e.preventDefault();
+    const p1 = document.getElementById('inputPass1').value.trim();
+    const p2 = document.getElementById('inputPass2').value.trim();
+    const btn = document.getElementById('btnSubmit');
+    const divExito = document.getElementById('msgExito');
+    const divError = document.getElementById('msgError');
+
+    divExito.style.display = 'none';
+    divError.style.display = 'none';
+
+    if (p1 !== p2) {
+      divError.innerText = "La contraseña y su repetición no son iguales. Podés hacer visible ambas.";
+      divError.style.display = 'block';
+      return;
+    }
+
+    if (!tokenGlobalDeAcceso) {
+      divError.innerText = "El link de restablecimiento de contraseña ha expirado o no es válido. Solicitá nuevamente el cambio desde la App.";
+      divError.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    divExito.innerText = "⌛ Guardando contraseña en tu base de datos corporativa...";
+    divExito.style.display = 'block';
+
+    try {
+      // 🔑 LE PEGA EN CALIENTE A LA URL DINÁMICA DE LA BASE DE DATOS HIJA ESPECÍFICA [PDF: 0.1.5]
+      const respuesta = await fetch(`${urlSupabaseCliente}/auth/v1/user`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': keyAnonCliente,
+          'Authorization': `Bearer ${tokenGlobalDeAcceso}`
+        },
+        body: JSON.stringify({ password: p1 })
+      });
+
+      const resultadoDatos = await respuesta.json();
+
+      if (!respuesta.ok || resultadoDatos.error) {
+        if (resultadoDatos.msg && resultadoDatos.msg.includes("New password should be different")) {
+          throw new Error("La nueva contraseña no debe ser la misma que la anterior.");
+        } else if (resultadoDatos.msg && resultadoDatos.msg.includes("token is expired")) {
+          throw new Error("El link de restablecimiento de contraseña ha expirado. Solicitá nuevamente.");
+        } else {
+          throw new Error(resultadoDatos.error?.message || resultadoDatos.message || "Error en el servidor de autenticación.");
+        }
+      }
+
+      divExito.innerText = "☑ ¡Contraseña guardada de forma exitosa!. Ya podés ingresar de forma normal a tu aplicación.";
+      document.getElementById('formRecuperar').reset();
+    } catch (err) {
+      console.error(err);
+      divExito.style.display = 'none';
+      divError.innerText = "❌ " + (err.message || "No se pudo actualizar tu contraseña. Solicitá nuevamente.");
+      divError.style.display = 'block';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
