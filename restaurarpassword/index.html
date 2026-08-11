@@ -67,7 +67,7 @@ input:focus { border-color: #ffb800; }
       <input type="text" id="inputSlugManual" class="input-SaaS" placeholder="Ej: actividadx, transportepya" autoCapitalize="none">
     </div>
     <button type="button" id="btnConectarManual" onclick="validarYConectarEmpresaManual()" style="width: 100%; background-color: #38bdf8; color: #000; padding: 12px; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; text-transform: uppercase;">
-      CONECTAR ENTORNO 🔌
+      🔌 CONECTAR ENTORNO
     </button>
   </div>
 
@@ -114,7 +114,7 @@ input:focus { border-color: #ffb800; }
 <script>  
   const BASE_URL_CONTROL = "https://tavxtkirrleyqgrnyvbh.supabase.co";
   const BASE_KEY_CONTROL = "sb_publishable_CNSQWrPPBy4w3AeTfDCTeg_Nfg0hv40";
-  
+ 
   let urlSupabaseCliente = "";
   let keyAnonCliente = "";
   let tokenGlobalDeAcceso = "";
@@ -129,81 +129,79 @@ input:focus { border-color: #ffb800; }
     }
 
     const paramsUrl = new URLSearchParams(buscarParametros);
-    const slugEmpresa = paramsUrl.get('empresa');
+    const idEmpresaUrl = paramsUrl.get('id');
 
-    if (slugEmpresa) {
-      document.getElementById('inputSlugManual').value = slugEmpresa;
-      await conectarConBaseDeDatosSaaS(slugEmpresa);
+    if (idEmpresaUrl) {
+      document.getElementById('inputSlugManual').value = idEmpresaUrl;
+      await conectarConBaseDeDatosSaaS(idEmpresaUrl);
     }
   });
 
   async function validarYConectarEmpresaManual() {
-    const slugIntroducido = document.getElementById('inputSlugManual').value.trim().toLowerCase();
+    const idIntroducido = document.getElementById('inputSlugManual').value.trim().toLowerCase();
     const divError = document.getElementById('msgError');
     divError.style.display = 'none';
 
-    if (!slugIntroducido) {
-      divError.innerText = "⚠ Ingresá el ID de tu empresa para continuar.";
+    if (!idIntroducido) {
+      divError.innerText = "⚠ Por favor, ingresá el ID de tu organización para continuar.";
       divError.style.display = 'block';
       return;
     }
 
-    await conectarConBaseDeDatosSaaS(slugIntroducido);
+    await conectarConBaseDeDatosSaaS(idIntroducido);
   }
-   
 
-	async function conectarConBaseDeDatosSaaS(slug) {
-	  const divError = document.getElementById('msgError');
-	  const divExito = document.getElementById('msgExito');
-	  divError.style.display = 'none';
-	  
-	  try {
-		document.getElementById('btnConectarManual').disabled = true;
-		document.getElementById('btnConectarManual').innerText = "CONECTANDO ENTORNO... ⌛";
-		
-		const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?id_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_anon_key,nombre_empresa`;
-		
-		console.log("🚀 Despachando consulta SaaS filtrando por id_empresa para:", slug);
+  async function conectarConBaseDeDatosSaaS(idTarget) {
+    const divError = document.getElementById('msgError');
+    const divExito = document.getElementById('msgExito');
+    divError.style.display = 'none';
+    
+    try {
+      document.getElementById('btnConectarManual').disabled = true;
+      document.getElementById('btnConectarManual').innerText = "⌛ CONECTANDO ENTORNO...";
+      
+      const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?id_empresa=eq.${encodeURIComponent(idTarget)}&select=supabase_url,supabase_anon_key,nombre_empresa`;
+      
+      console.log("🚀 Despachando consulta SaaS filtrando por id_empresa para:", idTarget);
 
-		const respuestaSaaS = await fetch(urlFetch, {
-		  method: 'GET',
-		  headers: {
-			'apikey': BASE_KEY_CONTROL,
-			'Authorization': `Bearer ${BASE_KEY_CONTROL}`
-		  }
-		});
-		
-		const datosEmpresa = await respuestaSaaS.json();
-		
-		
-		if (datosEmpresa && datosEmpresa.length > 0) {
-		  const org = datosEmpresa[0];
-		  		  
-		  urlSupabaseCliente = org.supabase_url;
-		  keyAnonCliente = org.supabase_anon_key; 
-		  		  
-		  document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
-		  document.getElementById('linkDinamicoApp').href = `${slug}://`;
-		  document.getElementById('banner-retorno').style.display = 'block';
-		  		  
-		  document.getElementById('bloqueConfiguradorManual').style.display = 'none';
- 
-		  document.getElementById('inputPass1').disabled = false;
-		  document.getElementById('inputPass2').disabled = false;
-		  document.getElementById('btnSubmit').disabled = false;
-		} else {
-		  throw new Error(`No se encontró ninguna organización registrada con el ID "${slug}" en el directorio central.`);
-		}
-	  } catch (err) {
-		console.error(err);
-		divError.innerText = "❌ " + (err.message || "Fallo de conexión en el ruteo central.");
-		divError.style.display = 'block';
-		document.getElementById('btnConectarManual').disabled = false;
-		document.getElementById('btnConectarManual').innerText = "CONECTAR ENTORNO 🔌";
-	  }
-	}
+      const respuestaSaaS = await fetch(urlFetch, {
+        method: 'GET',
+        headers: {
+          'apikey': BASE_KEY_CONTROL,
+          'Authorization': `Bearer ${BASE_KEY_CONTROL}`
+        }
+      });
+      
+      const datosEmpresa = await respuestaSaaS.json();
+      
+      if (datosEmpresa && datosEmpresa.length > 0) {
+        const org = datosEmpresa[0];
+                
+        urlSupabaseCliente = org.supabase_url;
+        keyAnonCliente = org.supabase_anon_key; 
+                
+        document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
+                
+        document.getElementById('linkDinamicoApp').href = `transportx://login?id=${idTarget}`;
+        document.getElementById('banner-retorno').style.display = 'block';
+                
+        document.getElementById('bloqueConfiguradorManual').style.display = 'none';
+        
+        document.getElementById('inputPass1').disabled = false;
+        document.getElementById('inputPass2').disabled = false;
+        document.getElementById('btnSubmit').disabled = false;
+      } else {
+        throw new Error(`No se encontró ninguna organización registrada con el ID "${idTarget}" en el directorio central.`);
+      }
+    } catch (err) {
+      console.error(err);
+      divError.innerText = "❌ " + (err.message || "Fallo de conexión en el ruteo central.");
+      divError.style.display = 'block';
+      document.getElementById('btnConectarManual').disabled = false;
+      document.getElementById('btnConectarManual').innerText = "CONECTAR ENTORNO 🔌";
+    }
+  }
 
-  
   function alternarVisibilidad(idInput, boton) {
     const campo = document.getElementById(idInput);
     if (campo.type === "password") {
@@ -233,7 +231,7 @@ input:focus { border-color: #ffb800; }
     }
 
     if (!tokenGlobalDeAcceso) {
-      divError.innerText = "El link de restablecimiento de contraseña ha expirado o no es válido. Solicitá nuevamente el cambio desde la App.";
+      divError.innerText = "El link de restablecimiento de contraseña ha expirado o no es válido. Solicitá nuevamente desde la App.";
       divError.style.display = 'block';
       return;
     }
@@ -243,7 +241,6 @@ input:focus { border-color: #ffb800; }
     divExito.style.display = 'block';
 
     try {
-      
       const respuesta = await fetch(`${urlSupabaseCliente}/auth/v1/user`, {
         method: 'PUT',
         headers: {
