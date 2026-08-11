@@ -150,54 +150,60 @@ input:focus { border-color: #ffb800; }
 
     await conectarConBaseDeDatosSaaS(slugIntroducido);
   }
-  
-  async function conectarConBaseDeDatosSaaS(slug) {
-    const divError = document.getElementById('msgError');
-    const divExito = document.getElementById('msgExito');
-    divError.style.display = 'none';
     
-    try {
-      document.getElementById('btnConectarManual').disabled = true;
-      document.getElementById('btnConectarManual').innerText = "CONECTANDO ENTORNO... ⌛";
+	async function conectarConBaseDeDatosSaaS(slug) {
+	  const divError = document.getElementById('msgError');
+	  const divExito = document.getElementById('msgExito');
+	  divError.style.display = 'none';
+	  
+	  try {
+		document.getElementById('btnConectarManual').disabled = true;
+		document.getElementById('btnConectarManual').innerText = "CONECTANDO ENTORNO... ⌛";
 
-      const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?nombre_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_key_anon,nombre_empresa`;
-      
-      const respuestaSaaS = await fetch(urlFetch, {
-        method: 'GET',
-        headers: {
-          'apikey': BASE_KEY_CONTROL,
-          'Authorization': `Bearer ${BASE_KEY_CONTROL}`
-        }
-      });
-      
-      const datosEmpresa = await respuestaSaaS.json();
-      
-      if (datosEmpresa && datosEmpresa.length > 0) {
-        const org = datosEmpresa[0];
-        urlSupabaseCliente = org.supabase_url;
-        keyAnonCliente = org.supabase_key_anon;
-                
-        document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
-        document.getElementById('linkDinamicoApp').href = `${slug}://`;
-        document.getElementById('banner-retorno').style.display = 'block';
-                
-        document.getElementById('bloqueConfiguradorManual').style.display = 'none';
-        
-        document.getElementById('inputPass1').disabled = false;
-        document.getElementById('inputPass2').disabled = false;
-        document.getElementById('btnSubmit').disabled = false;
-      } else {
-        throw new Error("No se encontró ninguna organización registrada con ese ID en el directorio central.");
-      }
-    } catch (err) {
-      console.error(err);
-      divError.innerText = "❌ " + (err.message || "Fallo de conexión en el ruteo central.");
-      divError.style.display = 'block';
-      document.getElementById('btnConectarManual').disabled = false;
-      document.getElementById('btnConectarManual').innerText = "CONECTAR ENTORNO 🔌";
-    }
-  }
+		// 🔑 RECTIFICACIÓN DE SELECT: Usamos supabase_anon_key de forma estricta [PDF: 0.1.8]
+		const urlFetch = `${BASE_URL_CONTROL}/rest/v1/directorio_empresas?nombre_empresa=eq.${encodeURIComponent(slug)}&select=supabase_url,supabase_anon_key,nombre_empresa`;
+		
+		console.log("🚀 Despachando consulta SaaS alineada al diccionario de datos para:", slug);
 
+		const respuestaSaaS = await fetch(urlFetch, {
+		  method: 'GET',
+		  headers: {
+			'apikey': BASE_KEY_CONTROL,
+			'Authorization': `Bearer ${BASE_KEY_CONTROL}`
+		  }
+		});
+		
+		const datosEmpresa = await respuestaSaaS.json();
+		
+		if (datosEmpresa && datosEmpresa.length > 0) {
+		  const org = datosEmpresa[0];
+		  		  
+		  urlSupabaseCliente = org.supabase_url;
+		  keyAnonCliente = org.supabase_anon_key;
+		  		  
+		  document.getElementById('subtituloSaaS').innerText = `Entorno Conectado: ${org.nombre_empresa} 🛰️`;
+		  document.getElementById('linkDinamicoApp').href = `${slug}://`;
+		  document.getElementById('banner-retorno').style.display = 'block';
+		  
+		  // Ocultamos el configurador manual de forma limpia ya que cumplió su ciclo [PDF: 0.1.8]
+		  document.getElementById('bloqueConfiguradorManual').style.display = 'none';
+
+		  // Desbloqueamos los campos del formulario de contraseñas de abajo [PDF: 0.1.8]
+		  document.getElementById('inputPass1').disabled = false;
+		  document.getElementById('inputPass2').disabled = false;
+		  document.getElementById('btnSubmit').disabled = false;
+		} else {
+		  throw new Error("No se encontró ninguna organización registrada con ese ID en el directorio central.");
+		}
+	  } catch (err) {
+		console.error(err);
+		divError.innerText = "❌ " + (err.message || "Fallo de conexión en el ruteo central.");
+		divError.style.display = 'block';
+		document.getElementById('btnConectarManual').disabled = false;
+		document.getElementById('btnConectarManual').innerText = "CONECTAR ENTORNO 🔌";
+	  }
+	}
+  
   function alternarVisibilidad(idInput, boton) {
     const campo = document.getElementById(idInput);
     if (campo.type === "password") {
