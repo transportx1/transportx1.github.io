@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TransportX Restablecer Contraseña</title>
+<title>TransportX - Restablecer Contraseña</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -237,7 +237,7 @@ input:focus { border-color: #ffb800; }
     }
 
     btn.disabled = true;
-    divExito.innerText = "⌛ Guardando contraseña en tu base de datos corporativa...";
+    divExito.innerText = "⌛ Guardando...";
     divExito.style.display = 'block';
 
     try {
@@ -263,7 +263,7 @@ input:focus { border-color: #ffb800; }
         }
       }
 
-      divExito.innerText = "☑ ¡Contraseña guardada de forma exitosa!. Ya podés ingresar de forma normal a tu aplicación.";
+      divExito.innerText = "☑ ¡Contraseña guardada!. Ya podés ingresar a tu aplicación.";
       document.getElementById('formRecuperar').reset();
     } catch (err) {
       console.error(err);
